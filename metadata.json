@@ -1,0 +1,6 @@
+{
+  "name": "প্রবাসী হাব",
+  "description": "কম খরচে বিমান টিকিট বুকিং, প্রবাসীদের পরিবারের জন্য astaa.store কেনাকাটা, রেমিট্যান্স ক্যালকুলেটর, অ্যাফিলিয়েট পার্টনার প্রোগ্রাম ও বিমানবন্দর কার সার্ভিস পোর্টাল",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
