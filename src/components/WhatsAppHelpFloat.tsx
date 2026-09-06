@@ -60,7 +60,7 @@ export const WhatsAppHelpFloat: React.FC = () => {
     '💳 Tabby ও Tamara দিয়ে ৪ কিস্তিতে টিকিট কাটার নিয়ম কি?',
     '🩺 সৌদি থেকে দেশে ডাক্তার ও অ্যাম্বুলেন্স বুক করব কিভাবে?',
     '🛒 astaa.store থেকে দেশে বাজার পাঠানোর নিয়ম কি?',
-    '🇸🇦 আকামা ও খুরুজ আওদা (রি-এন্ট্রি) এর নিয়ম কি?',
+    '🇸🇦 Absher, Qiwa বা আকামা স্ট্যাটাস কোথায় দেখব?',
     '🚗 ঢাকা এয়ারপোর্ট থেকে বাড়ি যাওয়ার গাড়ি ভাড়া কত?'
   ];
 
@@ -279,7 +279,7 @@ export const WhatsAppHelpFloat: React.FC = () => {
               >
                 <input
                   type="text"
-                  placeholder="টিকিট, লাগেজ, আকামা বা astaa.store নিয়ে প্রশ্ন লিখুন..."
+                  placeholder="আকামা, রেমিট্যান্স, টিকিট বা চিকিৎসা নিয়ে প্রশ্ন লিখুন..."
                   value={inputMessage}
                   onChange={(e) => setInputMessage(e.target.value)}
                   disabled={isLoading}
