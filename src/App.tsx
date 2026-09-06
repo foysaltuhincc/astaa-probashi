@@ -52,6 +52,10 @@ export default function App() {
     }
   });
   const [activeCurrencyCode, setActiveCurrencyCode] = useState('SAR');
+  const [rates, setRates] = useState(CURRENCY_RATES);
+  const [ratesUpdatedAt, setRatesUpdatedAt] = useState<string | null>(null);
+  const [ratesAreFallback, setRatesAreFallback] = useState(false);
+  const [isRefreshingRates, setIsRefreshingRates] = useState(false);
 
   useEffect(() => {
     try {
@@ -60,6 +64,30 @@ export default function App() {
       // ignore
     }
   }, [bookmarks]);
+
+  const refreshRates = async () => {
+    setIsRefreshingRates(true);
+    try {
+      const response = await fetch('/api/rates');
+      if (!response.ok) throw new Error('Rate request failed');
+      const data = await response.json();
+      if (!Array.isArray(data.rates)) throw new Error('Invalid rate response');
+      setRates(data.rates);
+      setRatesUpdatedAt(data.updatedAt || new Date().toISOString());
+      setRatesAreFallback(Boolean(data.isFallback));
+    } catch {
+      setRatesAreFallback(true);
+      setRatesUpdatedAt(new Date().toISOString());
+    } finally {
+      setIsRefreshingRates(false);
+    }
+  };
+
+  useEffect(() => {
+    void refreshRates();
+    const interval = window.setInterval(refreshRates, 5 * 60 * 1000);
+    return () => window.clearInterval(interval);
+  }, []);
 
   const handleToggleBookmark = (id: string) => {
     setBookmarks((prev) => 
@@ -81,10 +109,7 @@ export default function App() {
   return (
     <div className="min-h-screen flex flex-col bg-slate-100 text-slate-800 selection:bg-emerald-200 selection:text-emerald-900">
       {/* Top Currency Ticker */}
-      <CurrencyTicker 
-        rates={CURRENCY_RATES} 
-        onSelectCurrency={handleSelectCurrencyTicker} 
-      />
+      <CurrencyTicker rates={rates} onSelectCurrency={handleSelectCurrencyTicker} lastUpdated={ratesUpdatedAt} isFallback={ratesAreFallback} isRefreshing={isRefreshingRates} onRefresh={refreshRates} />
 
       {/* Navigation Bar */}
       <Navbar
@@ -274,7 +299,7 @@ export default function App() {
         {/* 4. Live Remittance & Incentive Calculator */}
         {(activeTab === 'all' || activeTab === 'remittance') && (
           <RemittanceCalculator 
-            rates={CURRENCY_RATES} 
+            rates={rates}
             defaultCurrencyCode={activeCurrencyCode}
           />
         )}

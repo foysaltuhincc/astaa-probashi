@@ -35,7 +35,7 @@ Official Business Details to know and promote:
 1. Airplane Tickets (সস্তা বিমান টিকিট):
    - You help expats search and find airline tickets without traditional travel agency extra commissions (saving ৳3,000 to ৳8,000 per ticket).
    - Airlines covered: Biman Bangladesh, Saudia, Emirates, Qatar Airways, FlyDubai, Gulf Air, Air Arabia, Kuwait Airways, US-Bangla, Malaysia Airlines.
-   - Verified baggage policy: Explain standard 46 kg (2 pieces x 23 kg) + 7 kg cabin baggage + 5 Liters free Zamzam water for Saudi flights.
+   - The platform advertises 46 kg baggage options for eligible routes. Always tell users to confirm the exact ticket fare rules, cabin baggage and Zamzam allowance with the airline before payment.
    - For direct booking assistance, ticket price quotes, or date changes, invite them to message on our official WhatsApp: +966505762139 (or 0505762139).
 
 3. Tabby & Tamara Installments (৪ মাসের সহজ কিস্তি - Buy Now Pay Later):
@@ -71,15 +71,21 @@ Official Business Details to know and promote:
    - Safe pre-booked private microbus/car from Dhaka (Hazrat Shahjalal) or Chittagong (Shah Amanat) airport directly to their village/home.
    - Transit hotels for long layovers.
 
-7. Expat Regulations & Welfare:
-   - Saudi Qiwa, Absher, Iqama renewal (আকামা নবায়ন), Khuruj Auda (রি-এন্ট্রি ভিসা), Kafeel policies.
-   - 24/7 Government Helpline: 16135 (Probashi Kalyan Call Center).
-   - Embassy contacts for emergencies.
+7. Saudi Portals & Expat Welfare:
+   - Absher: personal government services, Iqama and exit/re-entry status; Qiwa: employment contracts and labour-transfer requests; Muqeem: resident/visa verification; Najiz: justice services; Sehhaty: public health services.
+   - For Huroob, Iqama expiry, exit/re-entry, Kafala or transfer requests, explain the relevant portal and advise checking the user’s official account and employer because status and eligibility are case-specific.
+   - 24/7 Bangladesh Government expatriate welfare helpline: 16135. For Bangladesh Embassy Riyadh and Consulate Jeddah questions, advise using their official current contact pages before travelling or sharing documents.
+
+8. Remittance & Banking:
+   - Explain that STC Pay, urpay, Enjaz and Tahweel Al Rajhi are remittance options, but exchange rates, transfer fees, recipient availability and incentive eligibility must be confirmed in the selected provider before payment.
+   - The 2.5% government incentive is subject to current Bangladesh Bank rules and eligible legal remittance channels; never guarantee it for an individual transfer.
 
 Tone & Language:
-- Always respond in natural, polite Bengali (বাংলা), occasionally including recognized English terms (e.g., "Transit", "Baggage", "Iqama").
-- Format with clean bullet points and bold highlights for readability.
-- When answering booking or shopping questions, kindly mention that they can also contact our official WhatsApp: +966505762139 for fast personal help.
+- Always respond in natural, polite Bengali (বাংলা), occasionally including recognized English terms (e.g., "Transit", "Baggage", "Iqama"). Keep the answer concise: lead with the direct answer, then use at most 3 practical bullets.
+- Give official portal names and safe next steps for Absher, Qiwa, Muqeem, Najiz and Sehhaty. Do not invent eligibility, fees, deadlines, legal outcomes, or portal status. For Iqama, Huroob, Kafala/transfer or visa matters, say that policies and eligibility change and the user must verify in the relevant official portal or with their employer/embassy.
+- Banking/remittance rates are indicative. Do not promise a payout, government incentive eligibility, ticket price, baggage allowance, installment approval, medical availability, or emergency response. Tell users to confirm these with the provider before payment.
+- For urgent medical, legal, immigration, safety, or emergency issues, advise contacting the relevant official service or 16135 / Bangladesh Embassy or Consulate; do not present the chat as emergency support.
+- Format with clean bullet points and **bold** headings. When answering booking or shopping questions, kindly mention WhatsApp: +966505762139 for fast personal help.
 `;
 
 // Verification & SEO Routes
@@ -100,12 +106,51 @@ app.get("/api/health", (req, res) => {
   res.json({ status: "ok", timestamp: new Date().toISOString() });
 });
 
+type ExchangeRateResponse = { rates?: Record<string, number> };
+const RATE_CACHE_MS = 5 * 60 * 1000;
+let ratesCache: { rates: unknown[]; updatedAt: string; expiresAt: number } | null = null;
+
+app.get("/api/rates", async (_req, res) => {
+  if (ratesCache && ratesCache.expiresAt > Date.now()) {
+    res.json({ rates: ratesCache.rates, updatedAt: ratesCache.updatedAt, source: "exchange-rate-api" });
+    return;
+  }
+
+  const fallbackRates = [
+    { code: "SAR", name: "সৌদি রিয়াল", country: "সৌদি আরব", flag: "🇸🇦", symbol: "SR", rateToBdt: 32.10, bankRate: 32.05, change24h: 0, govtIncentivePercent: 2.5 },
+    { code: "AED", name: "ইউএই দিরহাম", country: "সংযুক্ত আরব আমিরাত", flag: "🇦🇪", symbol: "AED", rateToBdt: 32.80, bankRate: 32.72, change24h: 0, govtIncentivePercent: 2.5 },
+    { code: "QAR", name: "কাতারি রিয়াল", country: "কাতার", flag: "🇶🇦", symbol: "QR", rateToBdt: 33.15, bankRate: 33.05, change24h: 0, govtIncentivePercent: 2.5 },
+    { code: "KWD", name: "কুয়েতি দিনার", country: "কুয়েত", flag: "🇰🇼", symbol: "KD", rateToBdt: 393.50, bankRate: 392.80, change24h: 0, govtIncentivePercent: 2.5 },
+    { code: "OMR", name: "ওমানি রিয়াল", country: "ওমান", flag: "🇴🇲", symbol: "OMR", rateToBdt: 312.80, bankRate: 312.10, change24h: 0, govtIncentivePercent: 2.5 },
+    { code: "MYR", name: "মালয়েশিয়ান রিঙ্গিত", country: "মালয়েশিয়া", flag: "🇲🇾", symbol: "RM", rateToBdt: 27.50, bankRate: 27.42, change24h: 0, govtIncentivePercent: 2.5 },
+    { code: "SGD", name: "সিঙ্গাপুর ডলার", country: "সিঙ্গাপুর", flag: "🇸🇬", symbol: "S$", rateToBdt: 90.40, bankRate: 90.15, change24h: 0, govtIncentivePercent: 2.5 },
+    { code: "USD", name: "ইউএস ডলার", country: "যুক্তরাষ্ট্র", flag: "🇺🇸", symbol: "$", rateToBdt: 120.80, bankRate: 120.40, change24h: 0, govtIncentivePercent: 2.5 },
+  ];
+
+  try {
+    const response = await fetch("https://open.er-api.com/v6/latest/BDT", { signal: AbortSignal.timeout(5000) });
+    if (!response.ok) throw new Error(`Exchange provider returned ${response.status}`);
+    const data = await response.json() as ExchangeRateResponse;
+    if (!data.rates) throw new Error("Exchange provider returned no rates");
+    const rates = fallbackRates.map((rate) => {
+      const bdtPerUnit = data.rates?.[rate.code] ? 1 / data.rates[rate.code] : rate.rateToBdt;
+      return { ...rate, rateToBdt: Number(bdtPerUnit.toFixed(2)), bankRate: Number((bdtPerUnit * 0.998).toFixed(2)) };
+    });
+    const updatedAt = new Date().toISOString();
+    ratesCache = { rates, updatedAt, expiresAt: Date.now() + RATE_CACHE_MS };
+    res.json({ rates, updatedAt, source: "exchange-rate-api" });
+  } catch (error) {
+    console.warn("Live rate fetch failed; returning fallback rates:", error);
+    res.json({ rates: fallbackRates, updatedAt: new Date().toISOString(), isFallback: true, source: "fallback" });
+  }
+});
+
 // AI Chat endpoint
 app.post("/api/chat", async (req, res) => {
   const { message, history } = req.body;
 
-  if (!message || typeof message !== "string") {
-    res.status(400).json({ error: "Message is required" });
+  if (!message || typeof message !== "string" || message.trim().length > 2000) {
+    res.status(400).json({ error: "A message of up to 2000 characters is required" });
     return;
   }
 
@@ -195,12 +240,16 @@ function generateFallbackReply(msg: string): string {
     return `🩺 **সৌদি আরব থেকে দেশে পরিবারের জন্য ডাক্তার ও জরুরি চিকিৎসা সেবা:**\n\n- **বিশেষজ্ঞ ডাক্তার অ্যাপয়েন্টমেন্ট:** স্কয়ার, এভারকেয়ার, ইউনাইটেড, পপুলার, ল্যাবএইড ও পিজি হাসপাতালের শীর্ষ প্রফেসর ও কনসালট্যান্টদের সিরিয়াল সৌদি আরবে বসেই বুক করতে পারবেন।\n- **৩-পক্ষীয় ভিডিও কল:** আপনি সৌদি থেকে, দেশে আপনার পিতা-মাতা এবং অভিজ্ঞ চিকিৎসক একসাথে ভিডিও কলে রিপোর্ট দেখে চিকিৎসা নিতে পারবেন।\n- **জরুরি অ্যাম্বুলেন্স:** ৬৪ জেলায় এসি ও লাইফ সাপোর্ট আইসিইউ (ICU) অ্যাম্বুলেন্স সেবা।\n- **সৌদি থেকে পেমেন্ট:** আল-রাজি, এসএনবি বা যেকোনো ব্যাংকের **MADA কার্ড / STC Pay / Tamara কিস্তিতে** সরাসরি রিয়ালে বিল পরিশোধের সুবিধা।\n- **তাৎক্ষণিক বুকিং:** বিস্তারিত জানাতে বা সরাসরি বুক করতে আমাদের মেডিকেল হেল্পডেস্কে WhatsApp করুন: **+966505762139**।`;
   }
 
-  if (lower.includes("আকামা") || lower.includes("খুরুজ") || lower.includes("ভিসা") || lower.includes("iqama") || lower.includes("কিওয়া") || lower.includes("ছুটি")) {
-    return `📋 **আকামা ও খুরুজ আওদা (রি-এন্ট্রি) তথ্য:**\n\n- সৌদি আরবে আবশির (Absher) ও কিওয়া (Qiwa) পোর্টালের মাধ্যমে আকামার মেয়াদ ও এক্সিট রি-এন্ট্রি ভিসার বৈধতা যাচাই করা যায়।\n- ছুটিতে যাওয়ার পূর্বে অবশ্যই পাসপোর্টের মেয়াদ কমপক্ষে ৬ মাস এবং আকামার মেয়াদ ছুটির মেয়াদের চেয়ে বেশি থাকা নিশ্চিত করুন।\n- সরকারি সহায়তার জন্য প্রবাসী কল্যাণ কল সেন্টার **১৬১৩৫** নম্বরে ২৪/৭ যোগাযোগ করতে পারেন।`;
+  if (lower.includes("আকামা") || lower.includes("খুরুজ") || lower.includes("ভিসা") || lower.includes("iqama") || lower.includes("কিওয়া") || lower.includes("qiwa") || lower.includes("absher") || lower.includes("muqeem") || lower.includes("নাজিজ") || lower.includes("najiz") || lower.includes("sehhaty") || lower.includes("হুরুব") || lower.includes("huroob") || lower.includes("কাফালা") || lower.includes("transfer")) {
+    return `📋 **সৌদি সরকারি সেবা ও স্ট্যাটাস:**\n\n- **Absher:** আকামা, এক্সিট/রি-এন্ট্রি ও ব্যক্তিগত সরকারি সেবার স্ট্যাটাস দেখুন।\n- **Qiwa:** চাকরি, কন্ট্রাক্ট ও কর্মী ট্রান্সফার-সংক্রান্ত অনুরোধের জন্য ব্যবহার করুন। **Muqeem** ভিসা/বাসিন্দা তথ্য যাচাইয়ে এবং **Najiz** বিচারবিষয়ক সেবায় ব্যবহৃত হয়।\n- **Sehhaty:** স্বাস্থ্যসেবা ও অ্যাপয়েন্টমেন্টের সরকারি অ্যাপ।\n- হুরুব, আকামা, ট্রান্সফার বা কাফালা বিষয়ে নিয়ম ও যোগ্যতা পরিবর্তিত হতে পারে—নিজের Absher/Qiwa অ্যাকাউন্ট, নিয়োগকর্তা বা অনুমোদিত পরামর্শক থেকে বর্তমান অবস্থা যাচাই করুন। জরুরি প্রবাসী সহায়তায় **১৬১৩৫**।`;
   }
 
   if (lower.includes("গাড়ি") || lower.includes("কার") || lower.includes("এয়ারপোর্ট") || lower.includes("হোটেল")) {
     return `🚗 **বিমানবন্দর কার রেন্টাল সেবা:**\n\n- ঢাকা হযরত শাহজালাল বা চট্টগ্রাম শাহ আমানত বিমানবন্দরে নেমে রাতে নিরাপদে সপরিবারে বাড়ি যাওয়ার জন্য আমাদের সাইট থেকে ভেরিফায়েড এসি প্রাইভেটকার বা হায়েস মাইক্রোবাস বুক করতে পারেন।\n- সরাসরি বুকিংয়ের জন্য আমাদের WhatsApp **+966505762139** এ ফ্লাইটের সময় জানিয়ে রাখুন।`;
+  }
+
+  if (lower.includes("embassy") || lower.includes("দূতাবাস") || lower.includes("কনস্যুলেট") || lower.includes("জরুরি") || lower.includes("emergency")) {
+    return `🚨 **জরুরি প্রবাসী সহায়তা:**\n\n- বাংলাদেশ সরকারের প্রবাসী কল্যাণ হেল্পলাইন: **১৬১৩৫**।\n- রিয়াদে বাংলাদেশ দূতাবাস বা জেদ্দায় বাংলাদেশ কনস্যুলেটের অফিসিয়াল যোগাযোগ মাধ্যম ব্যবহার করুন।\n- জীবন-ঝুঁকির জরুরি অবস্থায় স্থানীয় সৌদি জরুরি সেবায় অবিলম্বে যোগাযোগ করুন। এই চ্যাট জরুরি সেবা নয়।`;
   }
 
   return `আসসালামু আলাইকুম! আমি **প্রবাসী এআই সহকারী**। 🇧🇩\n\nআমি আপনাকে নিম্নোক্ত বিষয়ে সাহায্য করতে পারি:\n1. ✈️ **সস্তা বিমান টিকিট, ৪৬ কেজি লাগেজ ও Tabby/Tamara কিস্তি**\n2. 🩺 **সৌদি থেকে দেশে পরিবারের জন্য ডাক্তার অ্যাপয়েন্টমেন্ট ও জরুরি অ্যাম্বুলেন্স**\n3. 🛒 **astaa.store থেকে দেশের বাড়িতে বাজার ও উপহার পাঠানো**\n4. 💱 **মুদ্রার লাইভ রেট ও ২.৫% সরকারি প্রণোদনা হিসাব**\n5. 📋 **আকামা, খুরুজ আওদা ও দূতাবাস হেল্পলাইন (১৬১৩৫)**\n6. 🚗 **এয়ারপোর্ট থেকে বাড়ি যাওয়ার নিরাপদ গাড়ি বুকিং**\n\nযেকোনো বিষয়ে জানতে নিচে আপনার প্রশ্নটি লিখুন, অথবা সরাসরি আমাদের WhatsApp এ নক দিন: **+966505762139**`;
