@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Analytics } from '@vercel/analytics/react';
 import { 
   Plane, 
   Coins, 
@@ -315,6 +316,7 @@ export default function App() {
           window.scrollTo({ top: 0, behavior: 'smooth' });
         }}
       />
+      <Analytics />
     </div>
   );
 }
