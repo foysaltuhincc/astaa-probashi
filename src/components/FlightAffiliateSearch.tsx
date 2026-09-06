@@ -38,7 +38,7 @@ export const FlightAffiliateSearch: React.FC = () => {
   const [passengers, setPassengers] = useState(1);
   const [travelClass, setTravelClass] = useState('ইকোনমি');
   const [showTabbyModal, setShowTabbyModal] = useState(false);
-  const affiliateId = 'probashi_hub_partner';
+  const tripComAffiliateUrl = 'https://www.trip.com?Allianceid=10456727&SID=330446355&trip_sub1=website&trip_sub3=D19707004';
 
   // Swap locations
   const handleSwap = () => {
@@ -56,9 +56,7 @@ export const FlightAffiliateSearch: React.FC = () => {
     return FLIGHT_DEALS;
   }, [fromCode, toCode]);
 
-  const generateAffiliateLink = (flight: FlightDeal) => {
-    return `https://www.skyscanner.com/transport/flights/${flight.fromCode.toLowerCase()}/${flight.toCode.toLowerCase()}?marker=${affiliateId}&associateid=AFF_${affiliateId}`;
-  };
+  const generateAffiliateLink = (_flight: FlightDeal) => tripComAffiliateUrl;
 
   const openWhatsAppFlightHelp = (flight: FlightDeal) => {
     const text = encodeURIComponent(
