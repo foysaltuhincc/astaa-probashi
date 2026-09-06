@@ -13,7 +13,11 @@ import {
   ShoppingBag,
   TrendingDown,
   Stethoscope,
-  DollarSign
+  DollarSign,
+  BadgeCheck,
+  Headphones,
+  HeartHandshake,
+  MapPin
 } from 'lucide-react';
 import { Navbar } from './components/Navbar';
 import { CurrencyTicker } from './components/CurrencyTicker';
@@ -96,62 +100,65 @@ export default function App() {
         {activeTab === 'all' && (
           <div className="space-y-6">
             {/* Core Value Proposition Hero */}
-            <div className="bg-gradient-to-r from-emerald-900 via-teal-950 to-slate-950 text-white rounded-3xl p-6 sm:p-10 shadow-lg relative overflow-hidden border border-emerald-800/40">
-              <div className="absolute right-0 top-0 bottom-0 w-1/2 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-emerald-500/20 via-sky-500/10 to-transparent pointer-events-none" />
-              
-              <div className="max-w-3xl relative z-10">
-                <div className="inline-flex items-center gap-2 bg-emerald-700/60 text-emerald-200 text-xs font-semibold px-3 py-1 rounded-full border border-emerald-500/40 mb-3">
-                  <Sparkles className="w-3.5 h-3.5 text-amber-300" />
-                  <span>দালাল ও অফলাইন এজেন্সির বাড়তি চার্জ ছাড়া সরাসরি সেবা</span>
+            <section className="relative overflow-hidden rounded-[2rem] bg-slate-950 text-white shadow-2xl shadow-emerald-950/20">
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_84%_18%,rgba(16,185,129,.34),transparent_28%),radial-gradient(circle_at_70%_90%,rgba(14,165,233,.2),transparent_30%)]" />
+              <div className="absolute -left-20 bottom-0 h-64 w-64 rounded-full border border-white/10" />
+              <div className="absolute -left-8 bottom-12 h-40 w-40 rounded-full border border-emerald-400/20" />
+
+              <div className="relative grid gap-10 p-6 sm:p-10 lg:grid-cols-[1.25fr_.75fr] lg:items-end lg:p-12">
+                <div className="max-w-3xl">
+                  <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-emerald-300/25 bg-emerald-400/10 px-3 py-1.5 text-xs font-bold text-emerald-100">
+                    <Sparkles className="h-3.5 w-3.5 text-amber-300" />
+                    প্রবাসী পরিবারের জন্য এক জায়গায় প্রয়োজনীয় সেবা
+                  </div>
+
+                  <h1 className="max-w-2xl text-4xl font-black leading-[1.18] tracking-tight sm:text-5xl lg:text-6xl">
+                    দূরত্ব কমান, পরিবারের পাশে থাকুন
+                  </h1>
+                  <p className="mt-5 max-w-2xl text-sm leading-7 text-slate-300 sm:text-base">
+                    স্বচ্ছ দামে বিমান টিকিট, দেশে পরিবারের জন্য প্রয়োজনীয় কেনাকাটা এবং নির্ভরযোগ্য সহায়তা—সবকিছু এখন আপনার হাতের মুঠোয়।
+                  </p>
+
+                  <div className="mt-8 flex flex-wrap gap-3">
+                    <button onClick={handleScrollToFlights} className="inline-flex items-center gap-2 rounded-xl bg-amber-400 px-5 py-3 text-sm font-extrabold text-slate-950 shadow-lg shadow-amber-500/20 transition hover:-translate-y-0.5 hover:bg-amber-300 cursor-pointer">
+                      <Plane className="h-4 w-4" /> বিমান টিকিট খুঁজুন <ArrowRight className="h-4 w-4" />
+                    </button>
+                    <button onClick={() => setActiveTab('shopping')} className="inline-flex items-center gap-2 rounded-xl border border-white/20 bg-white/10 px-5 py-3 text-sm font-bold text-white transition hover:bg-white/20 cursor-pointer">
+                      <ShoppingBag className="h-4 w-4 text-purple-200" /> পরিবারের জন্য কিনুন
+                    </button>
+                  </div>
                 </div>
 
-                <h1 className="text-3xl sm:text-5xl font-black tracking-tight leading-tight">
-                  কম খরচে বিমান টিকিট ও astaa.store দিয়ে পরিবারের যত্ন
-                </h1>
-
-                <p className="text-sm sm:text-base text-slate-200 mt-3 leading-relaxed">
-                  সাধারণ ট্রাভেল এজেন্সির ৩,০০০-৮,০০০ টাকা কমিশন বাঁচিয়ে সরাসরি ৪৬ কেজি নিশ্চিত ব্যাগেজসহ টিকিট কাটুন। এছাড়া বিদেশ থেকে astaa.store-এর মাধ্যমে দেশে থাকা মা-বাবা ও পরিবারের কাছে খাঁটি খাদ্য, গ্যাজেট ও উপহার পৌঁছে দিন ৬৪ জেলায়!
-                </p>
-
-                <div className="mt-6 flex flex-wrap items-center gap-3">
-                  <button
-                    onClick={handleScrollToFlights}
-                    className="inline-flex items-center gap-2 bg-amber-400 hover:bg-amber-300 active:bg-amber-500 text-slate-950 text-xs sm:text-sm font-extrabold px-5 py-3 rounded-xl transition-all shadow-md cursor-pointer hover:scale-102"
-                  >
-                    <Plane className="w-4 h-4 text-slate-950" />
-                    <span>সাশ্রয়ী বিমান টিকিট কাটুন</span>
-                    <ArrowRight className="w-4 h-4" />
+                <aside className="rounded-2xl border border-white/10 bg-white/[0.07] p-5 backdrop-blur-sm sm:p-6">
+                  <p className="text-xs font-bold uppercase tracking-[0.18em] text-emerald-300">Astaa promise</p>
+                  <div className="mt-5 space-y-4">
+                    <div className="flex gap-3">
+                      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-400/15 text-emerald-300"><BadgeCheck className="h-5 w-5" /></span>
+                      <div><p className="font-bold">স্বচ্ছ সেবা ও সাশ্রয়</p><p className="mt-0.5 text-xs leading-5 text-slate-300">অফলাইন এজেন্সির বাড়তি কমিশন ছাড়াই বুকিং করুন।</p></div>
+                    </div>
+                    <div className="flex gap-3">
+                      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-sky-400/15 text-sky-300"><MapPin className="h-5 w-5" /></span>
+                      <div><p className="font-bold">৬৪ জেলায় পরিবারের কাছে</p><p className="mt-0.5 text-xs leading-5 text-slate-300">উপহার ও প্রয়োজনীয় জিনিস পৌঁছে দিন দেশে।</p></div>
+                    </div>
+                    <div className="flex gap-3">
+                      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-amber-400/15 text-amber-300"><Headphones className="h-5 w-5" /></span>
+                      <div><p className="font-bold">প্রয়োজনে দ্রুত সহায়তা</p><p className="mt-0.5 text-xs leading-5 text-slate-300">আমাদের সহকারীকে জিজ্ঞাসা করুন, আমরা পাশে আছি।</p></div>
+                    </div>
+                  </div>
+                  <button onClick={() => document.getElementById('btn-whatsapp-float')?.click()} className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-400 px-4 py-3 text-sm font-extrabold text-emerald-950 transition hover:bg-emerald-300 cursor-pointer">
+                    <HeartHandshake className="h-4 w-4" /> এআই সহকারীকে প্রশ্ন করুন
                   </button>
-
-                  <button
-                    onClick={() => setActiveTab('shopping')}
-                    className="inline-flex items-center gap-2 bg-purple-600 hover:bg-purple-700 text-white text-xs sm:text-sm font-bold px-4 py-3 rounded-xl transition-colors shadow-xs cursor-pointer"
-                  >
-                    <ShoppingBag className="w-4 h-4 text-purple-200" />
-                    <span>astaa.store কেনাকাটা</span>
-                  </button>
-
-                  <button
-                    onClick={() => document.getElementById('btn-whatsapp-float')?.click()}
-                    className="inline-flex items-center gap-2 bg-teal-500 hover:bg-teal-400 text-slate-950 text-xs sm:text-sm font-bold px-4 py-3 rounded-xl transition-colors shadow-xs cursor-pointer"
-                  >
-                    <Sparkles className="w-4 h-4 text-slate-950" />
-                    <span>এআই সহকারীকে প্রশ্ন করুন</span>
-                  </button>
-
-                  <button
-                    onClick={() => setActiveTab('agency-compare')}
-                    className="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white text-xs sm:text-sm font-medium px-4 py-3 rounded-xl border border-white/20 transition-colors cursor-pointer"
-                  >
-                    <TrendingDown className="w-4 h-4 text-emerald-300" />
-                    <span>এজেন্সির সাথে তুলনা</span>
-                  </button>
-                </div>
+                </aside>
               </div>
-            </div>
+            </section>
 
             {/* Quick Action Category Grid */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3">
+            <section>
+              <div className="mb-4 flex items-end justify-between gap-4">
+                <div><p className="text-xs font-bold uppercase tracking-[0.16em] text-emerald-700">Explore services</p><h2 className="mt-1 text-xl font-black text-slate-900 sm:text-2xl">আপনার প্রয়োজনের সেবা বেছে নিন</h2></div>
+                <button onClick={() => setActiveTab('agency-compare')} className="hidden items-center gap-1 text-xs font-bold text-emerald-700 hover:text-emerald-900 sm:inline-flex cursor-pointer">কেন Astaa? <ArrowRight className="h-3.5 w-3.5" /></button>
+              </div>
+              <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-8">
               <button
                 onClick={() => setActiveTab('flights')}
                 className="bg-white p-4 rounded-xl border border-slate-200 hover:border-sky-400 shadow-xs hover:shadow-md transition-all text-left group cursor-pointer"
@@ -239,7 +246,8 @@ export default function App() {
                 <h3 className="font-bold text-slate-900 text-xs sm:text-sm">দূতাবাস হেল্প</h3>
                 <p className="text-[11px] text-slate-500">১৬১৩৫ কল সেন্টার</p>
               </button>
-            </div>
+              </div>
+            </section>
           </div>
         )}
 
