@@ -98,7 +98,7 @@ export const WhatsAppHelpFloat: React.FC = () => {
       const assistantMsg: ChatMessage = {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
-        content: data.reply || 'দুঃখিত, কোনো উত্তর পাওয়া যায়নি।',
+        content: data.reply || data.error || 'দুঃখিত, কোনো উত্তর পাওয়া যায়নি।',
         time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
       };
 
