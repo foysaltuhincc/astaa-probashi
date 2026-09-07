@@ -1,4 +1,4 @@
-import { createGateway, generateText } from 'ai';
+import { GoogleGenAI } from '@google/genai';
 
 type ChatMessage = {
   role?: unknown;
@@ -126,25 +126,41 @@ export default async function handler(
   const history = normalizeHistory(req.body?.history);
   const prompt = history ? `${history}\nগ্রাহক: ${message}` : `গ্রাহক: ${message}`;
 
-  // No Gateway key → instant keyword answer (chat never goes silent)
-  if (!process.env.AI_GATEWAY_API_KEY) {
+  // No API key → instant keyword answer (chat never goes silent)
+  if (!process.env.GEMINI_API_KEY) {
     res.status(200).json({ reply: fallbackReply(message), isFallback: true });
     return;
   }
 
   try {
-    const gateway = createGateway({ apiKey: process.env.AI_GATEWAY_API_KEY });
-    const { text } = await generateText({
-      model: gateway('google/gemini-2.5-flash'),
-      system: SYSTEM_PROMPT,
-      prompt,
-      temperature: 0.3,
-      maxOutputTokens: 700,
-    });
+    const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+    const candidateModels = ['gemini-2.5-flash', 'gemini-2.5-flash-lite'];
+    let replyText = '';
 
-    res.status(200).json({ reply: text || fallbackReply(message), isFallback: !text });
+    for (const modelName of candidateModels) {
+      try {
+        const response = await ai.models.generateContent({
+          model: modelName,
+          contents: prompt,
+          config: { systemInstruction: SYSTEM_PROMPT, temperature: 0.3, maxOutputTokens: 700 },
+        });
+        if (response.text) {
+          replyText = response.text;
+          break;
+        }
+      } catch (err) {
+        console.warn(`Model ${modelName} failed, trying fallback:`, err instanceof Error ? err.message : err);
+      }
+    }
+
+    if (!replyText) {
+      res.status(200).json({ reply: fallbackReply(message), isFallback: true });
+      return;
+    }
+
+    res.status(200).json({ reply: replyText });
   } catch (error) {
-    console.error('AI Gateway chat request failed:', error);
+    console.error('Gemini chat request failed:', error);
     res.status(200).json({ reply: fallbackReply(message), isFallback: true });
   }
 }
