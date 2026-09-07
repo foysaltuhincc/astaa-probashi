@@ -802,7 +802,7 @@ export const ASTAA_STORE_PRODUCTS: StoreProduct[] = [
     originalPriceBdt: 3200,
     rating: 4.9,
     reviewsCount: 420,
-    imageUrl: 'https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&w=800&q=80',
+    imageUrl: 'https://images.unsplash.com/photo-1603252109303-2751441dd157?auto=format&fit=crop&w=800&q=80',
     description: '১০০% আরামদায়ক প্রিমিয়াম সুতি কাপড়ে তৈরি আভিজাত্যপূর্ণ ডিজাইনার পাঞ্জাবি। প্রবাসী ভাইদের পক্ষ থেকে পরিবারের জন্য সেরা উপহার।',
     deliveryTime: '২৪-৪৮ ঘণ্টায় দেশের যেকোনো জেলায় হোম ডেলিভারি',
     directStoreUrl: 'https://astaa.store/collections/fashion',
