@@ -39,14 +39,24 @@ const SPECIALIST_CATEGORIES: SpecialistCategory[] = [
   { id: 'eye', name: 'চক্ষু রোগ বিশেষজ্ঞ', enName: 'Ophthalmology', icon: '👁️', commonIssues: 'চোখের ছানি অপারেশন, ঝাপসা দেখা, চশমা পাওয়ার' },
 ];
 
-const TOP_HOSPITALS = [
-  { name: 'Evercare Hospital', city: 'ঢাকা ও চট্টগ্রাম', type: 'JCI অ্যাক্রিডিটেড' },
-  { name: 'Square Hospital', city: 'পান্থপথ, ঢাকা', type: 'টারশিয়ারি কেয়ার' },
-  { name: 'United Hospital', city: 'গুলশান, ঢাকা', type: 'মাল্টি-স্পেশালিটি' },
-  { name: 'Ibn Sina Hospital & Diagnostic', city: 'সারাদেশে শাখা', type: 'জনপ্রিয় ডায়াগনস্টিক' },
-  { name: 'Popular Diagnostic Centre', city: 'সকল বিভাগীয় শহর', type: 'শীর্ষ ডায়াগনস্টিক' },
-  { name: 'Labaid Specialized Hospital', city: 'ধানমন্ডি, ঢাকা', type: 'কার্ডিয়াক ও জেনারেল' },
-  { name: 'BSMMU (সাবেক পিজি হাসপাতাল)', city: 'শাহবাগ, ঢাকা', type: 'জাতীয় রেফারেল' }
+interface HospitalContact {
+  name: string;
+  city: string;
+  type: string;
+  hotline?: string;
+  hotlineLabel?: string;
+  bookingUrl?: string;
+  bookingLabel?: string;
+}
+
+const TOP_HOSPITALS: HospitalContact[] = [
+  { name: 'Square Hospital', city: 'পান্থপথ, ঢাকা', type: 'টারশিয়ারি কেয়ার', hotline: '10616', hotlineLabel: 'হটলাইন 10616' },
+  { name: 'Evercare Hospital', city: 'বসুন্ধরা, ঢাকা', type: 'JCI অ্যাক্রিডিটেড', hotline: '10678', hotlineLabel: 'হটলাইন 10678' },
+  { name: 'United (Continental) Hospital', city: 'গুলশান, ঢাকা', type: 'মাল্টি-স্পেশালিটি', hotline: '10666', hotlineLabel: 'হটলাইন 10666' },
+  { name: 'Ibn Sina Hospital', city: 'সারাদেশে শাখা', type: 'জনপ্রিয় ডায়াগনস্টিক', hotline: '09610010615', hotlineLabel: 'সিরিয়াল 09610010615' },
+  { name: 'Popular Diagnostic Centre', city: 'সকল বিভাগীয় শহর', type: 'শীর্ষ ডায়াগনস্টিক', hotline: '10636', hotlineLabel: 'হটলাইন 10636' },
+  { name: 'Labaid Specialized Hospital', city: 'ধানমন্ডি, ঢাকা', type: 'কার্ডিয়াক ও জেনারেল', hotline: '10606', hotlineLabel: 'হটলাইন 10606', bookingUrl: 'https://appointment.labaid.com.bd/', bookingLabel: 'অনলাইন বুকিং' },
+  { name: 'BSMMU (সাবেক পিজি হাসপাতাল)', city: 'শাহবাগ, ঢাকা', type: 'জাতীয় রেফারেল — সরাসরি আউটডোর টিকিট' },
 ];
 
 export const BangladeshMedicalServiceSection: React.FC = () => {
@@ -230,22 +240,49 @@ export const BangladeshMedicalServiceSection: React.FC = () => {
             <div className="bg-slate-50 p-5 rounded-xl border border-slate-200">
               <h4 className="font-bold text-slate-900 text-xs sm:text-sm mb-2 flex items-center gap-2">
                 <Building2 className="w-4 h-4 text-slate-700" />
-                <span>বাংলাদেশের শীর্ষ হাসপাতাল ও ডায়াগনস্টিক নেটওয়ার্ক:</span>
+                <span>হাসপাতাল হটলাইন ও সিরিয়াল নম্বর — ট্যাপ করে কল করুন:</span>
               </h4>
-              <div className="flex flex-wrap gap-2">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                 {TOP_HOSPITALS.map((h, idx) => (
-                  <span 
-                    key={idx} 
-                    className="inline-flex items-center gap-1.5 bg-white border border-slate-200 text-slate-700 text-xs font-medium px-2.5 py-1 rounded-lg shadow-2xs"
+                  <div
+                    key={idx}
+                    className="bg-white border border-slate-200 rounded-xl p-3 shadow-2xs flex flex-col gap-1.5"
                   >
-                    <span className="w-1.5 h-1.5 rounded-full bg-teal-600"></span>
-                    <strong>{h.name}</strong>
-                    <span className="text-slate-400 text-[10px]">({h.city})</span>
-                  </span>
+                    <div className="flex items-center gap-1.5">
+                      <span className="w-1.5 h-1.5 rounded-full bg-teal-600 shrink-0"></span>
+                      <strong className="text-slate-900 text-xs">{h.name}</strong>
+                    </div>
+                    <span className="text-slate-400 text-[10px]">{h.city} • {h.type}</span>
+                    <div className="flex flex-wrap gap-1.5 mt-0.5">
+                      {h.hotline && (
+                        <a
+                          href={`tel:${h.hotline.replace(/\s/g, '')}`}
+                          className="inline-flex items-center gap-1 bg-teal-700 hover:bg-teal-800 text-white text-[11px] font-bold px-2.5 py-1.5 rounded-lg transition-colors cursor-pointer"
+                        >
+                          <Phone className="w-3 h-3" />
+                          <span>{h.hotlineLabel || h.hotline}</span>
+                        </a>
+                      )}
+                      {h.bookingUrl && (
+                        <a
+                          href={h.bookingUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1 bg-white hover:bg-sky-50 text-sky-800 border border-sky-300 text-[11px] font-bold px-2.5 py-1.5 rounded-lg transition-colors cursor-pointer"
+                        >
+                          <Calendar className="w-3 h-3" />
+                          <span>{h.bookingLabel}</span>
+                        </a>
+                      )}
+                      {!h.hotline && !h.bookingUrl && (
+                        <span className="text-[11px] text-slate-500">সরাসরি হাসপাতাল কাউন্টার থেকে টিকিট নিন</span>
+                      )}
+                    </div>
+                  </div>
                 ))}
               </div>
               <p className="text-[11px] text-slate-500 mt-2.5">
-                * রোগী যে জেলায় অবস্থান করেন, তার নিকটস্থ মানসম্মত হাসপাতাল ও অভিজ্ঞ অধ্যাপকদের শিডিউল অনুযায়ী অ্যাপয়েন্টমেন্ট নির্ধারণ করে দেওয়া হয়।
+                * হটলাইন নম্বরগুলো বাংলাদেশ থেকে সরাসরি লাগে। সৌদি থেকে না লাগলে WhatsApp ডেস্কে বলুন — আমরা আপনার হয়ে সিরিয়াল নিয়ে দেবো।
               </p>
             </div>
 
