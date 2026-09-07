@@ -57,6 +57,11 @@ const TOP_HOSPITALS: HospitalContact[] = [
   { name: 'Popular Diagnostic Centre', city: 'সকল বিভাগীয় শহর', type: 'শীর্ষ ডায়াগনস্টিক', hotline: '10636', hotlineLabel: 'হটলাইন 10636' },
   { name: 'Labaid Specialized Hospital', city: 'ধানমন্ডি, ঢাকা', type: 'কার্ডিয়াক ও জেনারেল', hotline: '10606', hotlineLabel: 'হটলাইন 10606', bookingUrl: 'https://appointment.labaid.com.bd/', bookingLabel: 'অনলাইন বুকিং' },
   { name: 'BSMMU (সাবেক পিজি হাসপাতাল)', city: 'শাহবাগ, ঢাকা', type: 'জাতীয় রেফারেল — সরাসরি আউটডোর টিকিট' },
+  { name: 'Anwer Khan Modern Hospital', city: 'ধানমন্ডি, ঢাকা', type: 'মাল্টি-স্পেশালিটি', hotline: '10652', hotlineLabel: 'হটলাইন 10652' },
+  { name: 'National Heart Foundation', city: 'মিরপুর, ঢাকা', type: 'কার্ডিয়াক স্পেশালাইজড' },
+  { name: 'Parkview Hospital', city: 'পাঁচলাইশ, চট্টগ্রাম', type: 'চট্টগ্রামে সেরা', hotline: '10619', hotlineLabel: 'হটলাইন 10619' },
+  { name: 'Evercare Hospital Chattogram', city: 'অক্সিজেন, চট্টগ্রাম', type: 'JCI অ্যাক্রিডিটেড', hotline: '10663', hotlineLabel: 'হটলাইন 10663' },
+  { name: 'Mount Adora Hospital', city: 'সিলেট', type: 'সিলেটের শীর্ষ' },
 ];
 
 export const BangladeshMedicalServiceSection: React.FC = () => {
