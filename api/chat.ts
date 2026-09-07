@@ -1,4 +1,4 @@
-import { gateway, generateText } from 'ai';
+import { GoogleGenAI } from '@google/genai';
 
 type ChatMessage = {
   role?: unknown;
@@ -84,22 +84,24 @@ export default async function handler(
     return;
   }
 
+  if (!process.env.GEMINI_API_KEY) {
+    res.status(503).json({ error: 'AI key এখনও সেট করা হয়নি। অনুগ্রহ করে একটু পরে আবার চেষ্টা করুন।' });
+    return;
+  }
+
   try {
     const history = normalizeHistory(req.body?.history);
     const prompt = history ? `${history}\nগ্রাহক: ${message}` : `গ্রাহক: ${message}`;
-    const { text } = await generateText({
-      model: gateway('google/gemini-3-flash'),
-      system: SYSTEM_PROMPT,
-      prompt,
-      temperature: 0.3,
-      maxOutputTokens: 700,
+    const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+    const response = await ai.models.generateContent({
+      model: 'gemini-2.5-flash',
+      contents: prompt,
+      config: { systemInstruction: SYSTEM_PROMPT, temperature: 0.3, maxOutputTokens: 700 },
     });
 
-    res.status(200).json({ reply: text });
+    res.status(200).json({ reply: response.text || 'দুঃখিত, কোনো উত্তর পাওয়া যায়নি।' });
   } catch (error) {
-    console.error('AI chat request failed:', error);
-    res.status(503).json({
-      error: 'এখন এআই সহকারী উত্তর দিতে পারছে না। অনুগ্রহ করে একটু পরে আবার চেষ্টা করুন বা WhatsApp-এ যোগাযোগ করুন।',
-    });
+    console.error('Gemini chat request failed:', error);
+    res.status(503).json({ error: 'এখন এআই সহকারী উত্তর দিতে পারছে না। অনুগ্রহ করে একটু পরে আবার চেষ্টা করুন বা WhatsApp-এ যোগাযোগ করুন।' });
   }
 }
