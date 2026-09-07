@@ -45,22 +45,23 @@ interface HospitalContact {
   type: string;
   hotline?: string;
   hotlineLabel?: string;
+  mobile?: string;
   bookingUrl?: string;
   bookingLabel?: string;
 }
 
 const TOP_HOSPITALS: HospitalContact[] = [
-  { name: 'Square Hospital', city: 'পান্থপথ, ঢাকা', type: 'টারশিয়ারি কেয়ার', hotline: '10616', hotlineLabel: 'হটলাইন 10616' },
-  { name: 'Evercare Hospital', city: 'বসুন্ধরা, ঢাকা', type: 'JCI অ্যাক্রিডিটেড', hotline: '10678', hotlineLabel: 'হটলাইন 10678' },
-  { name: 'United (Continental) Hospital', city: 'গুলশান, ঢাকা', type: 'মাল্টি-স্পেশালিটি', hotline: '10666', hotlineLabel: 'হটলাইন 10666' },
-  { name: 'Ibn Sina Hospital', city: 'সারাদেশে শাখা', type: 'জনপ্রিয় ডায়াগনস্টিক', hotline: '09610010615', hotlineLabel: 'সিরিয়াল 09610010615' },
-  { name: 'Popular Diagnostic Centre', city: 'সকল বিভাগীয় শহর', type: 'শীর্ষ ডায়াগনস্টিক', hotline: '10636', hotlineLabel: 'হটলাইন 10636' },
+  { name: 'Square Hospital', city: 'পান্থপথ, ঢাকা', type: 'টারশিয়ারি কেয়ার', hotline: '10616', hotlineLabel: 'হটলাইন 10616', mobile: '+8809610010616' },
+  { name: 'Evercare Hospital', city: 'বসুন্ধরা, ঢাকা', type: 'JCI অ্যাক্রিডিটেড', hotline: '10678', hotlineLabel: 'হটলাইন 10678', mobile: '+8809606316505' },
+  { name: 'United (Continental) Hospital', city: 'গুলশান, ঢাকা', type: 'মাল্টি-স্পেশালিটি', hotline: '10666', hotlineLabel: 'হটলাইন 10666', mobile: '+8809666710666' },
+  { name: 'Ibn Sina Hospital', city: 'সারাদেশে শাখা', type: 'জনপ্রিয় ডায়াগনস্টিক', hotline: '10615', hotlineLabel: 'হটলাইন 10615', mobile: '09610010615' },
+  { name: 'Popular Diagnostic Centre', city: 'সকল বিভাগীয় শহর', type: 'শীর্ষ ডায়াগনস্টিক', hotline: '10636', hotlineLabel: 'হটলাইন 10636', mobile: '09613787801' },
   { name: 'Labaid Specialized Hospital', city: 'ধানমন্ডি, ঢাকা', type: 'কার্ডিয়াক ও জেনারেল', hotline: '10606', hotlineLabel: 'হটলাইন 10606', bookingUrl: 'https://appointment.labaid.com.bd/', bookingLabel: 'অনলাইন বুকিং' },
   { name: 'BSMMU (সাবেক পিজি হাসপাতাল)', city: 'শাহবাগ, ঢাকা', type: 'জাতীয় রেফারেল — সরাসরি আউটডোর টিকিট' },
-  { name: 'Anwer Khan Modern Hospital', city: 'ধানমন্ডি, ঢাকা', type: 'মাল্টি-স্পেশালিটি', hotline: '10652', hotlineLabel: 'হটলাইন 10652' },
+  { name: 'Anwer Khan Modern Hospital', city: 'ধানমন্ডি, ঢাকা', type: 'মাল্টি-স্পেশালিটি', hotline: '10652', hotlineLabel: 'হটলাইন 10652', mobile: '09678010652' },
   { name: 'National Heart Foundation', city: 'মিরপুর, ঢাকা', type: 'কার্ডিয়াক স্পেশালাইজড' },
-  { name: 'Parkview Hospital', city: 'পাঁচলাইশ, চট্টগ্রাম', type: 'চট্টগ্রামে সেরা', hotline: '10619', hotlineLabel: 'হটলাইন 10619' },
-  { name: 'Evercare Hospital Chattogram', city: 'অক্সিজেন, চট্টগ্রাম', type: 'JCI অ্যাক্রিডিটেড', hotline: '10663', hotlineLabel: 'হটলাইন 10663' },
+  { name: 'Parkview Hospital', city: 'পাঁচলাইশ, চট্টগ্রাম', type: 'চট্টগ্রামে সেরা', hotline: '10619', hotlineLabel: 'হটলাইন 10619', mobile: '09610818888' },
+  { name: 'Evercare Hospital Chattogram', city: 'অক্সিজেন, চট্টগ্রাম', type: 'JCI অ্যাক্রিডিটেড', hotline: '10663', hotlineLabel: 'হটলাইন 10663', mobile: '+8809610800444' },
   { name: 'Mount Adora Hospital', city: 'সিলেট', type: 'সিলেটের শীর্ষ' },
 ];
 
@@ -266,6 +267,15 @@ export const BangladeshMedicalServiceSection: React.FC = () => {
                         >
                           <Phone className="w-3 h-3" />
                           <span>{h.hotlineLabel || h.hotline}</span>
+                        </a>
+                      )}
+                      {h.mobile && (
+                        <a
+                          href={`tel:${h.mobile.replace(/[\s-]/g, '')}`}
+                          className="inline-flex items-center gap-1 bg-white hover:bg-emerald-50 text-emerald-800 border border-emerald-300 text-[11px] font-bold px-2.5 py-1.5 rounded-lg transition-colors cursor-pointer"
+                        >
+                          <Phone className="w-3 h-3" />
+                          <span className="font-mono">{h.mobile}</span>
                         </a>
                       )}
                       {h.bookingUrl && (
