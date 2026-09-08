@@ -145,6 +145,13 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
         {/* Bottom copyright */}
         <div className="pt-6 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-3">
           <p>© ২০২৬ প্রবাসী হাব (Probashi Hub) — সকল অধিকার সংরক্ষিত।</p>
+          <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1">
+            <button onClick={() => onNavigate('legal')} className="hover:text-white transition-colors cursor-pointer">আমাদের সম্পর্কে</button>
+            <button onClick={() => onNavigate('legal')} className="hover:text-white transition-colors cursor-pointer">যোগাযোগ</button>
+            <button onClick={() => onNavigate('legal')} className="hover:text-white transition-colors cursor-pointer">গোপনীয়তা নীতি</button>
+            <button onClick={() => onNavigate('legal')} className="hover:text-white transition-colors cursor-pointer">শর্তাবলী</button>
+            <button onClick={() => onNavigate('legal')} className="hover:text-white transition-colors cursor-pointer">দাবিত্যাগ</button>
+          </div>
           <div className="flex items-center gap-1 text-slate-400">
             <span>বিশ্বজুড়ে আমাদের সম্মানিত রেমিট্যান্স যোদ্ধাদের সম্মানে নিবেদিত</span>
             <Heart className="w-3.5 h-3.5 text-rose-500 fill-rose-500" />
