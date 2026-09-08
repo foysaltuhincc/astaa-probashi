@@ -128,7 +128,7 @@ export default async function handler(
 
   // No API key → instant keyword answer (chat never goes silent)
   if (!process.env.GEMINI_API_KEY) {
-    res.status(200).json({ reply: fallbackReply(message), isFallback: true });
+    res.status(200).json({ reply: fallbackReply(message), isFallback: true, keyPresent: false });
     return;
   }
 
@@ -154,13 +154,13 @@ export default async function handler(
     }
 
     if (!replyText) {
-      res.status(200).json({ reply: fallbackReply(message), isFallback: true });
+      res.status(200).json({ reply: fallbackReply(message), isFallback: true, keyPresent: true });
       return;
     }
 
     res.status(200).json({ reply: replyText });
   } catch (error) {
     console.error('Gemini chat request failed:', error);
-    res.status(200).json({ reply: fallbackReply(message), isFallback: true });
+    res.status(200).json({ reply: fallbackReply(message), isFallback: true, keyPresent: Boolean(process.env.GEMINI_API_KEY) });
   }
 }
