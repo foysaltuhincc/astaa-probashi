@@ -29,7 +29,7 @@ export const AffiliateProgramSection: React.FC = () => {
 
   // Generate personalized affiliate link
   const cleanId = (phoneOrId.trim() || partnerName.trim() || 'PROBASHI').replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
-  const generatedLink = `https://astaa-probashi.ai.studio/?ref=${cleanId}`;
+  const generatedLink = `https://astaaprobashi.site/?ref=${cleanId}`;
 
   const handleCopyLink = () => {
     navigator.clipboard.writeText(generatedLink);

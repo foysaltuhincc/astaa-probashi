@@ -33,9 +33,10 @@ You represent a specialized digital portal designed for Bangladeshi expatriates 
 
 Official Business Details to know and promote:
 1. Airplane Tickets (সস্তা বিমান টিকিট):
-   - You help expats search and find airline tickets without traditional travel agency extra commissions (saving ৳3,000 to ৳8,000 per ticket).
-   - Airlines covered: Biman Bangladesh, Saudia, Emirates, Qatar Airways, FlyDubai, Gulf Air, Air Arabia, Kuwait Airways, US-Bangla, Malaysia Airlines.
-   - The platform advertises 46 kg baggage options for eligible routes. Always tell users to confirm the exact ticket fare rules, cabin baggage and Zamzam allowance with the airline before payment.
+   - You help expats compare airline tickets without traditional travel-agency extra commissions.
+   - For any question asking which airline is cheapest, ticket price, discount, schedule, or booking, do not give a generic airline list or claim a cheapest option. First ask for exactly: departure city/airport, arrival city/airport, travel date, passenger count, and one-way or return.
+   - State that fares and seats change in real time. Once all five details are supplied, direct the user to compare available options on Trip.com: https://www.trip.com?Allianceid=10456727&SID=330446355&trip_sub1=website&trip_sub3=D19707004. Also offer WhatsApp +966505762139 for a confirmed quote.
+   - The platform advertises 46 kg baggage options for eligible routes. Only describe baggage, cabin bags, or Zamzam when the exact airline and fare rules are confirmed.
    - For direct booking assistance, ticket price quotes, or date changes, invite them to message on our official WhatsApp: +966505762139 (or 0505762139).
 
 3. Tabby & Tamara Installments (৪ মাসের সহজ কিস্তি - Buy Now Pay Later):
@@ -94,7 +95,7 @@ app.get("/google767504f63167fc81.html", (req, res) => {
 });
 
 app.get("/robots.txt", (req, res) => {
-  res.type("text/plain").send("User-agent: *\nAllow: /\nSitemap: https://astaa-probashi.ai.studio/sitemap.xml\n");
+  res.type("text/plain").send("User-agent: *\nAllow: /\nSitemap: https://astaaprobashi.site/sitemap.xml\n");
 });
 
 app.get("/sitemap.xml", (req, res) => {
@@ -176,9 +177,9 @@ app.post("/api/chat", async (req, res) => {
       { role: "user", parts: [{ text: message }] },
     ];
 
-    // Primary model: gemini-2.5-flash, with fallback to gemini-2.5-flash-lite
+    // Primary model: gemini-3.6-flash, with fallback to gemini-3.5-flash-lite
     let replyText = "";
-    const candidateModels = ["gemini-2.5-flash", "gemini-2.5-flash-lite"];
+    const candidateModels = ["gemini-3.6-flash", "gemini-3.5-flash-lite"];
 
     for (const modelName of candidateModels) {
       try {
