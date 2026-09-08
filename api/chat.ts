@@ -211,12 +211,14 @@ export default async function handler(
       diag += `modellist:${e instanceof Error ? e.message.slice(0, 80) : e};`;
     }
     candidateModels.push('gemini-2.0-flash', 'gemini-2.0-flash-lite');
-    // Warm instances reuse the last working model first (big speedup);
-    // cap attempts so a cold start never crawls through a dozen dead models.
+    // Warm instances reuse the last working model first (big speedup).
+    // Skip non-text modalities (tts/image/embedding/live) to save quota.
     if (cachedModelName) {
       candidateModels = [cachedModelName, ...candidateModels.filter((m) => m !== cachedModelName)];
     }
-    candidateModels = candidateModels.slice(0, 5);
+    candidateModels = candidateModels
+      .filter((m) => !/tts|image|embedding|aqa|live|realtime/i.test(m))
+      .slice(0, 12);
     let replyText = '';
 
     for (const modelName of candidateModels) {
