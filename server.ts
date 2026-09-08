@@ -95,7 +95,7 @@ app.get("/google767504f63167fc81.html", (req, res) => {
 });
 
 app.get("/robots.txt", (req, res) => {
-  res.type("text/plain").send("User-agent: *\nAllow: /\nSitemap: https://astaa-probashi.ai.studio/sitemap.xml\n");
+  res.type("text/plain").send("User-agent: *\nAllow: /\nSitemap: https://astaaprobashi.site/sitemap.xml\n");
 });
 
 app.get("/sitemap.xml", (req, res) => {
