@@ -126,9 +126,40 @@ export default async function handler(
   const history = normalizeHistory(req.body?.history);
   const prompt = history ? `${history}\nগ্রাহক: ${message}` : `গ্রাহক: ${message}`;
 
-  // No API key → instant keyword answer (chat never goes silent)
+  // 1) DeepSeek (primary) — OpenAI-compatible chat API
+  if (process.env.DEEPSEEK_API_KEY) {
+    try {
+      const dsRes = await fetch('https://api.deepseek.com/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${process.env.DEEPSEEK_API_KEY}`,
+        },
+        body: JSON.stringify({
+          model: 'deepseek-chat',
+          messages: [
+            { role: 'system', content: SYSTEM_PROMPT },
+            { role: 'user', content: prompt },
+          ],
+          temperature: 0.3,
+          max_tokens: 700,
+        }),
+      });
+      const dsData = await dsRes.json();
+      const dsText: string | undefined = dsData?.choices?.[0]?.message?.content;
+      if (dsText) {
+        res.status(200).json({ reply: dsText, backend: 'deepseek' });
+        return;
+      }
+      console.warn('DeepSeek empty reply, trying Gemini');
+    } catch (err) {
+      console.warn('DeepSeek call failed, trying Gemini:', err instanceof Error ? err.message : err);
+    }
+  }
+
+  // 2) Gemini (secondary)
   if (!process.env.GEMINI_API_KEY) {
-    res.status(200).json({ reply: fallbackReply(message), isFallback: true, keyPresent: false });
+    res.status(200).json({ reply: fallbackReply(message), isFallback: true, backend: 'fallback' });
     return;
   }
 
@@ -154,13 +185,13 @@ export default async function handler(
     }
 
     if (!replyText) {
-      res.status(200).json({ reply: fallbackReply(message), isFallback: true, keyPresent: true });
+      res.status(200).json({ reply: fallbackReply(message), isFallback: true, backend: 'fallback' });
       return;
     }
 
-    res.status(200).json({ reply: replyText });
+    res.status(200).json({ reply: replyText, backend: 'gemini' });
   } catch (error) {
     console.error('Gemini chat request failed:', error);
-    res.status(200).json({ reply: fallbackReply(message), isFallback: true, keyPresent: Boolean(process.env.GEMINI_API_KEY) });
+    res.status(200).json({ reply: fallbackReply(message), isFallback: true, backend: 'fallback' });
   }
 }
