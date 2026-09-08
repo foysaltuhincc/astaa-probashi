@@ -200,7 +200,7 @@ export default async function handler(
         const acts: unknown = (m as { supportedActions?: unknown }).supportedActions;
         if (typeof m.name === 'string' && Array.isArray(acts) && acts.includes('generateContent')) {
           candidateModels.push(m.name.replace(/^models\//, ''));
-          if (candidateModels.length >= 3) break;
+          if (candidateModels.length >= 12) break;
         }
       }
     } catch (e) {
