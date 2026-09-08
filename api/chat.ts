@@ -191,7 +191,22 @@ export default async function handler(
 
   try {
     const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
-    const candidateModels = ['gemini-2.5-flash', 'gemini-2.5-flash-lite'];
+
+    // Pick live models dynamically (old names get retired) + static fallbacks
+    let candidateModels: string[] = [];
+    try {
+      const pager = await ai.models.list();
+      for await (const m of pager) {
+        const acts: unknown = (m as { supportedActions?: unknown }).supportedActions;
+        if (typeof m.name === 'string' && Array.isArray(acts) && acts.includes('generateContent')) {
+          candidateModels.push(m.name.replace(/^models\//, ''));
+          if (candidateModels.length >= 3) break;
+        }
+      }
+    } catch (e) {
+      diag += `modellist:${e instanceof Error ? e.message.slice(0, 80) : e};`;
+    }
+    candidateModels.push('gemini-2.0-flash', 'gemini-2.0-flash-lite');
     let replyText = '';
 
     for (const modelName of candidateModels) {
