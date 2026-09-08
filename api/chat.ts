@@ -148,6 +148,7 @@ export default async function handler(
 
   const history = normalizeHistory(req.body?.history);
   const prompt = history ? `${history}\nগ্রাহক: ${message}` : `গ্রাহক: ${message}`;
+  let diag = '';
 
   // 1) DeepSeek (primary) — OpenAI-compatible chat API
   if (process.env.DEEPSEEK_API_KEY) {
@@ -174,8 +175,10 @@ export default async function handler(
         res.status(200).json({ reply: dsText, backend: 'deepseek' });
         return;
       }
+      diag += `ds-empty:${dsRes.status};`;
       console.warn('DeepSeek empty reply, trying Gemini');
     } catch (err) {
+      diag += `ds-err:${err instanceof Error ? err.message : err};`;
       console.warn('DeepSeek call failed, trying Gemini:', err instanceof Error ? err.message : err);
     }
   }
@@ -203,22 +206,25 @@ export default async function handler(
           break;
         }
       } catch (err) {
-        console.warn(`Model ${modelName} failed, trying fallback:`, err instanceof Error ? err.message : err);
+        const m = err instanceof Error ? err.message : String(err);
+        diag += `${modelName}:${m.slice(0, 120)};`;
+        console.warn(`Model ${modelName} failed, trying fallback:`, m);
       }
     }
 
     if (!replyText) {
-      res.status(200).json({ reply: fallbackReply(message), isFallback: true, backend: 'fallback' });
+      res.status(200).json({ reply: fallbackReply(message), isFallback: true, backend: 'fallback', diag: diag || 'gemini-no-text' });
       return;
     }
 
     res.status(200).json({ reply: replyText, backend: 'gemini' });
   } catch (error) {
+    diag += `outer:${error instanceof Error ? error.message : String(error)};`;
     console.error('Gemini chat request failed:', error);
   }
 
   // 3) Keyword fallback — chat never goes silent
   // NOTE: free keyless AI backends (Pollinations, Duck.ai) were tested
   // Sep 2026 — both now require payment / block server calls.
-  res.status(200).json({ reply: fallbackReply(message), isFallback: true, backend: 'fallback' });
+  res.status(200).json({ reply: fallbackReply(message), isFallback: true, backend: 'fallback', diag: diag || 'no-keys' });
 }
