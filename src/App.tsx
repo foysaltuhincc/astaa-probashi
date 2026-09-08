@@ -28,6 +28,7 @@ import { AffiliateProgramSection } from './components/AffiliateProgramSection';
 import { RemittanceCalculator } from './components/RemittanceCalculator';
 import { NewsSection } from './components/NewsSection';
 import { HotelCarSection } from './components/HotelCarSection';
+import { CarRentalSection } from './components/CarRentalSection';
 import { BangladeshMedicalServiceSection } from './components/BangladeshMedicalServiceSection';
 import { HealthEmbassySection } from './components/HealthEmbassySection';
 import { ArticleModal } from './components/ArticleModal';
@@ -320,6 +321,11 @@ export default function App() {
         {/* 5. Transit Hotel & Airport to Home Safe Car Booking */}
         {(activeTab === 'all' || activeTab === 'hotels') && (
           <HotelCarSection />
+        )}
+
+        {/* 5b. Car Rental Directory: counters, companies, cities, FAQ */}
+        {(activeTab === 'all' || activeTab === 'hotels') && (
+          <CarRentalSection />
         )}
 
         {/* 6. News & Expat Magazine / Immigration Articles */}
