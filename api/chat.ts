@@ -134,7 +134,7 @@ export default async function handler(
 
   try {
     const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
-    const candidateModels = ['gemini-2.5-flash', 'gemini-2.5-flash-lite'];
+    const candidateModels = ['gemini-3.6-flash', 'gemini-3.5-flash-lite'];
     let replyText = '';
 
     for (const modelName of candidateModels) {

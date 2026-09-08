@@ -176,9 +176,9 @@ app.post("/api/chat", async (req, res) => {
       { role: "user", parts: [{ text: message }] },
     ];
 
-    // Primary model: gemini-2.5-flash, with fallback to gemini-2.5-flash-lite
+    // Primary model: gemini-3.6-flash, with fallback to gemini-3.5-flash-lite
     let replyText = "";
-    const candidateModels = ["gemini-2.5-flash", "gemini-2.5-flash-lite"];
+    const candidateModels = ["gemini-3.6-flash", "gemini-3.5-flash-lite"];
 
     for (const modelName of candidateModels) {
       try {
