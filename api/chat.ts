@@ -22,12 +22,16 @@ const RATE_LIMIT_WINDOW_MS = 60_000;
 const RATE_LIMIT_MAX_REQUESTS = 10;
 const requestsByIp = new Map<string, { count: number; resetAt: number }>();
 
+// Last working Gemini model (module scope → reused by warm instances for speed)
+let cachedModelName: string | null = null;
+
 const SYSTEM_PROMPT = `You are "প্রবাসী এআই সহকারী", the customer support assistant for প্রবাসী হাব.
 Always reply in natural, polite Bengali. Give a direct answer followed by at most three practical bullets.
 You can help with flight tickets, baggage rules, Tabby/Tamara installments, astaa.store shopping, remittance, airport transport, Bangladeshi healthcare bookings, and Saudi expatriate portals such as Absher, Qiwa, Muqeem, Najiz, and Sehhaty.
 Do not invent current prices, ticket availability, exchange rates, legal eligibility, visa/iqama status, medical availability, or emergency response. Tell customers to confirm time-sensitive details with the relevant airline, provider, official portal, employer, embassy, or WhatsApp support.
 For booking, shopping, and personal assistance, offer WhatsApp +966 50 576 2139. For urgent medical, legal, immigration, safety, or emergency matters, state that this chat is not emergency support and direct the user to the relevant official service or Bangladesh expatriate welfare helpline 16135.
-Never ask for passwords, OTPs, card numbers, passport scans, or other sensitive information.`;
+Never ask for passwords, OTPs, card numbers, passport scans, or other sensitive information.
+PRICE QUESTIONS: When the user asks for a ticket price or availability for a route/date, NEVER invent a fare. Instead tell them they can check live prices right here on this site in the Flight Search section ("বিমান টিকিট খুঁজুন") and the airline booking links, mention 1-2 practical tips (e.g. mid-week cheaper, 46kg baggage routes), and offer WhatsApp +966 50 576 2139 for exact quote and booking help.`;
 
 function getClientIp(req: { headers?: Record<string, string | string[] | undefined> }): string {
   const forwarded = req.headers?.['x-forwarded-for'];
@@ -207,6 +211,12 @@ export default async function handler(
       diag += `modellist:${e instanceof Error ? e.message.slice(0, 80) : e};`;
     }
     candidateModels.push('gemini-2.0-flash', 'gemini-2.0-flash-lite');
+    // Warm instances reuse the last working model first (big speedup);
+    // cap attempts so a cold start never crawls through a dozen dead models.
+    if (cachedModelName) {
+      candidateModels = [cachedModelName, ...candidateModels.filter((m) => m !== cachedModelName)];
+    }
+    candidateModels = candidateModels.slice(0, 5);
     let replyText = '';
 
     for (const modelName of candidateModels) {
@@ -214,10 +224,11 @@ export default async function handler(
         const response = await ai.models.generateContent({
           model: modelName,
           contents: prompt,
-          config: { systemInstruction: SYSTEM_PROMPT, temperature: 0.3, maxOutputTokens: 700 },
+          config: { systemInstruction: SYSTEM_PROMPT, temperature: 0.3, maxOutputTokens: 500 },
         });
         if (response.text) {
           replyText = response.text;
+          cachedModelName = modelName;
           break;
         }
       } catch (err) {
