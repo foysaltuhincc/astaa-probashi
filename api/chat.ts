@@ -192,6 +192,10 @@ export default async function handler(
     res.status(200).json({ reply: replyText, backend: 'gemini' });
   } catch (error) {
     console.error('Gemini chat request failed:', error);
-    res.status(200).json({ reply: fallbackReply(message), isFallback: true, backend: 'fallback' });
   }
+
+  // 3) Keyword fallback — chat never goes silent
+  // NOTE: free keyless AI backends (Pollinations, Duck.ai) were tested
+  // Sep 2026 — both now require payment / block server calls.
+  res.status(200).json({ reply: fallbackReply(message), isFallback: true, backend: 'fallback' });
 }
