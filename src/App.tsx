@@ -31,6 +31,7 @@ import { HotelCarSection } from './components/HotelCarSection';
 import { BangladeshMedicalServiceSection } from './components/BangladeshMedicalServiceSection';
 import { HealthEmbassySection } from './components/HealthEmbassySection';
 import { ArticleModal } from './components/ArticleModal';
+import { WhatDoYouNeed } from './components/WhatDoYouNeed';
 import { WhatsAppHelpFloat } from './components/WhatsAppHelpFloat';
 import { Footer } from './components/Footer';
 import { 
@@ -106,6 +107,15 @@ export default function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const handleNavigateTab = (tab: string) => {
+    setActiveTab(tab);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleOpenAssistant = () => {
+    document.getElementById('btn-whatsapp-float')?.click();
+  };
+
   return (
     <div className="min-h-screen flex flex-col bg-slate-100 text-slate-800 selection:bg-emerald-200 selection:text-emerald-900">
       {/* Top Currency Ticker */}
@@ -176,6 +186,9 @@ export default function App() {
                 </aside>
               </div>
             </section>
+
+            {/* Signature UX: What do you need today? */}
+            <WhatDoYouNeed onNavigate={handleNavigateTab} onAskAI={handleOpenAssistant} />
 
             {/* Quick Action Category Grid */}
             <section>
