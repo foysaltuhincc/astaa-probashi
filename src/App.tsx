@@ -32,6 +32,7 @@ import { CarRentalSection } from './components/CarRentalSection';
 import { BangladeshMedicalServiceSection } from './components/BangladeshMedicalServiceSection';
 import { HealthEmbassySection } from './components/HealthEmbassySection';
 import { ArticleModal } from './components/ArticleModal';
+import { LegalPages } from './components/LegalPages';
 import { WhatDoYouNeed } from './components/WhatDoYouNeed';
 import { WhatsAppHelpFloat } from './components/WhatsAppHelpFloat';
 import { Footer } from './components/Footer';
@@ -347,6 +348,11 @@ export default function App() {
         {/* 8. Emergency Embassy Directory & Welfare */}
         {(activeTab === 'all' || activeTab === 'emergency') && (
           <HealthEmbassySection />
+        )}
+
+        {/* 9. Legal & Policy Pages (About/Contact/Privacy/Terms/Disclaimer) */}
+        {activeTab === 'legal' && (
+          <LegalPages />
         )}
       </main>
 
