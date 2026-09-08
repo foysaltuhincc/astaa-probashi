@@ -79,7 +79,7 @@ export const LegalPages: React.FC = () => {
                 <span className="font-bold text-emerald-900 text-sm">WhatsApp হেল্পডেস্ক: +966 50 576 2139</span>
               </a>
               <div className="flex items-center gap-3 bg-slate-50 border border-slate-200 rounded-xl p-4">
-                <span className="font-bold text-slate-900 text-sm">ইমেইল: support@astaa.store</span>
+                <span className="font-bold text-slate-900 text-sm">ইমেইল: contact@astaa.store</span>
               </div>
               <div className="flex items-center gap-3 bg-slate-50 border border-slate-200 rounded-xl p-4">
                 <span className="text-slate-700 text-sm">প্রবাসী কল সেন্টার (সরকারি): <strong>১৬১৩৫</strong> (২৪/৭ ফ্রি)</span>
