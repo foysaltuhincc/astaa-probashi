@@ -445,9 +445,9 @@ export const FLIGHT_DEALS: FlightDeal[] = [
     arrivalTime: '০৬:৪৫ (+১)',
     duration: '৫ ঘণ্টা ১৫ মি.',
     stops: 'নন-স্টপ ডিরেক্ট',
-    priceBdt: 44500,
-    agencyPriceBdt: 49500,
-    savingsBdt: 5000,
+    priceBdt: 39500,
+    agencyPriceBdt: 44000,
+    savingsBdt: 4500,
     baggage: '৪৬ কেজি (২৩ x ২) + ৭ কেজি হ্যান্ড লাগেজ',
     affiliateUrl: 'https://www.skyscanner.com/transport/flights/ruh/dac',
     popularRoute: true
