@@ -21,6 +21,7 @@ import {
 } from 'lucide-react';
 import { Navbar } from './components/Navbar';
 import { CurrencyTicker } from './components/CurrencyTicker';
+import { FlightTicker } from './components/FlightTicker';
 import { FlightAffiliateSearch } from './components/FlightAffiliateSearch';
 import { AgencyComparisonSection } from './components/AgencyComparisonSection';
 import { AstaaStoreSection } from './components/AstaaStoreSection';
@@ -122,6 +123,9 @@ export default function App() {
     <div className="min-h-screen flex flex-col bg-slate-100 text-slate-800 selection:bg-emerald-200 selection:text-emerald-900">
       {/* Top Currency Ticker */}
       <CurrencyTicker rates={rates} onSelectCurrency={handleSelectCurrencyTicker} lastUpdated={ratesUpdatedAt} isFallback={ratesAreFallback} isRefreshing={isRefreshingRates} onRefresh={refreshRates} />
+
+      {/* Daily Airline Price Scroll */}
+      <FlightTicker />
 
       {/* Navigation Bar */}
       <Navbar
