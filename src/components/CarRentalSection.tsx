@@ -57,9 +57,37 @@ const tel = (n: string) => `tel:${n.replace(/[\s-]/g, '')}`;
 
 export const CarRentalSection: React.FC = () => {
   const [openFaq, setOpenFaq] = useState<number | null>(0);
+  const [open, setOpen] = useState(false);
 
   return (
     <div id="car-rental-directory" className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden mb-8">
+      {/* Unique entry teaser — click to expand the full directory inside */}
+      <button
+        onClick={() => setOpen(!open)}
+        className="w-full text-left bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white p-5 sm:p-6 flex items-center gap-4 cursor-pointer"
+      >
+        <span className="w-12 h-12 rounded-2xl bg-amber-400 text-slate-950 flex items-center justify-center shrink-0">
+          <Car className="w-6 h-6" />
+        </span>
+        <span className="flex-1 min-w-0">
+          <span className="block text-[11px] font-bold uppercase tracking-widest text-amber-300">
+            গাড়ি ভাড়া ডিরেক্টরি
+          </span>
+          <span className="block text-lg sm:text-xl font-black leading-snug">
+            এয়ারপোর্ট থেকে বাড়ি — সব ঠিকানা ও নম্বর
+          </span>
+          <span className="block text-xs text-slate-300 mt-0.5">
+            ৬টি কাউন্টার • ৬টি কোম্পানি • ৪ শহর — ক্লিক করলে ভেতরে সব দেখুন
+          </span>
+        </span>
+        <span className={`shrink-0 inline-flex items-center gap-1.5 text-xs font-bold px-3.5 py-2.5 rounded-xl transition-colors ${open ? 'bg-white/15 text-white' : 'bg-amber-400 text-slate-950'}`}>
+          <span>{open ? 'লুকান' : 'ভেতরে দেখুন'}</span>
+          <ChevronDown className={`w-4 h-4 transition-transform ${open ? 'rotate-180' : ''}`} />
+        </span>
+      </button>
+
+      {open && (
+      <>
       {/* Header */}
       <div className="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white p-6 sm:p-8">
         <div className="inline-flex items-center gap-2 bg-white/10 text-amber-200 text-xs font-semibold px-2.5 py-1 rounded-full border border-white/15 mb-2">
@@ -214,6 +242,7 @@ export const CarRentalSection: React.FC = () => {
           </div>
         </section>
       </div>
+      </>)}
     </div>
   );
 };
